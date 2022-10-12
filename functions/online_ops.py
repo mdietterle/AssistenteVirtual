@@ -59,11 +59,12 @@ def send_email(receiver_address, subject, message):
 def get_latest_news():
     news_headlines = []
     res = requests.get(
-        f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}&language=pt").json()
+        f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}&country=br").json()
     articles = res["articles"]
-    print(f'artigos {articles}')
+    #print(f'artigos {articles}')
     for article in articles:
         news_headlines.append(article["title"])
+    print(news_headlines)
     return news_headlines[:5]
 
 

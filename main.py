@@ -1,3 +1,5 @@
+import time
+
 import requests
 from functions.online_ops import find_my_ip, get_latest_news, get_random_advice, get_random_joke, get_trending_movies, get_weather_report, play_on_youtube, search_on_google, search_on_wikipedia, send_email, send_whatsapp_message
 import pyttsx3
@@ -24,8 +26,7 @@ engine.setProperty('volume', 1.0)
 
 # Set Voice (Female)
 voices = engine.getProperty('voices')
-engine.setProperty("voice", "brazil")
-engine.setProperty("languages", [b'\x05pt-br'])
+engine.setProperty("voice", voices[53].id)
 
 # Text to Speech Conversion
 def speak(text):
@@ -50,7 +51,23 @@ def greet_user():
 
 # Takes Input from User
 def chama_severino():
-    pass
+    r1 = sr.Recognizer()
+    with sr.Microphone() as source:
+        r1.adjust_for_ambient_noise(source, duration=1)
+        print('Aguardando...')
+        r1.pause_threshold = 1
+        audio = r1.listen(source)
+        try:
+            query2 = r1.recognize_google(audio, language='pt-br')
+            print(f"q2 {query2}")
+            query2 = query2.lower()
+            if 'severino' in query2:
+                return query2
+        except Exception:
+            print('aqui')
+            return 'nada'
+
+
 def take_user_input():
     """Takes user input, recognizes it using Speech Recognition module and converts it into text"""
     r = sr.Recognizer()
@@ -79,12 +96,13 @@ def take_user_input():
 
 
 if __name__ == '__main__':
-    greet_user()
     while 1:
-        query = take_user_input().lower()
+        #query = chama_severino().lower()
+        query = 'severino'
         if 'severino' in query:
             speak('Sim Senhor!')
             while 1:
+                greet_user()
                 query = take_user_input().lower()
                 if 'open notepad' in query:
                     open_notepad()
@@ -166,7 +184,11 @@ if __name__ == '__main__':
 
                 elif 'notícias' in query:
                     speak(f"Vou procurar as manchetes do dia, Senhor")
-                    speak(get_latest_news())
+                    noticias = get_latest_news()
+                    speak(f"Estas são as 10 principais manchetes que encontrei:")
+                    for noticia in noticias:
+                        speak(noticia)
+                        time.sleep(1)
                     speak("Estou imprimindo na tela o resultado da consulta, senhor, caso seja melhor para o senhor.")
                     print(*get_latest_news(), sep='\n')
 
@@ -183,3 +205,4 @@ if __name__ == '__main__':
                     speak(f"Além disso, a previsão fala de {weather}")
                     speak("Estou imprimindo na tela o resultado da consulta, senhor, caso seja melhor para o senhor.")
                     print(f"Description: {weather}\nTemperature: {temperature}\nFeels like: {feels_like}")
+                    break
