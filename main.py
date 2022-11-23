@@ -27,6 +27,8 @@ engine.setProperty('volume', 1.0)
 # Set Voice (Female)
 voices = engine.getProperty('voices')
 engine.setProperty("voice", voices[53].id)
+def teste():
+    pass
 
 # Text to Speech Conversion
 def speak(text):
